@@ -38,6 +38,7 @@ export const Users = () => {
             });
             const response = await serverReq.json();
             if (response.status !== 200) throw new Error();
+            getUsers();
         } catch(e) {
             console.log(e);
         };
