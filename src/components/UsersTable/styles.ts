@@ -5,7 +5,7 @@ export const TableUsers = styled.table`
 
     th,td{
         border-bottom: 1px solid #9999;
-        padding: 10px 30px;
+        padding: 10px 20px;
     }
 
     caption {
