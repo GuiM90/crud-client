@@ -1,6 +1,6 @@
 import * as C from "./styles" ;
 import { Users } from "../UsersTable/Users";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export const UserForm = () => {
     const [userName, setUserName] = useState("");
@@ -21,9 +21,15 @@ export const UserForm = () => {
             });
             const response = await serverReq.json();
             if (response.status !== 200) throw new Error();
+            inputClear();
         } catch(e) {
             console.log(e);
         };
+    };
+
+    const inputClear = () => {
+        setUserEmail("");
+        setUserName("");
     };
 
     return(
@@ -36,6 +42,7 @@ export const UserForm = () => {
                 <label htmlFor="name">Nome</label>
                 <input type="text"
                  placeholder="Digite o nome..." 
+                 value={userName}
                  name="name"
                  onChange={e => setUserName(e.target.value)}/>
             </div>
@@ -43,6 +50,7 @@ export const UserForm = () => {
                 <label htmlFor="email">E-mail</label>
                 <input type="text"
                  placeholder="Digite o email... "
+                 value={userEmail}
                   name="email"
                   onChange={e => setUserEmail(e.target.value)}/>
             </div>
@@ -50,7 +58,7 @@ export const UserForm = () => {
 
         <C.ButtonWrapper>
             <C.SaveButton onClick={saveUser}>Salvar</C.SaveButton>
-            <C.CancelButton>Cancelar</C.CancelButton>
+            <C.CancelButton onClick={inputClear}>Cancelar</C.CancelButton>
         </C.ButtonWrapper>
 
         <C.TableWrapper>
