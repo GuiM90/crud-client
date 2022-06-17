@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const TableUsers = styled.form`
+export const TableUsers = styled.table`
     text-align: left;
 
     th,td{
