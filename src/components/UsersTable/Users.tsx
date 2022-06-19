@@ -1,7 +1,7 @@
 import * as C from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface User {
     id: number
@@ -23,7 +23,10 @@ export const Users = () => {
         setAllUsers(json);
         return json;
     };
-    window.onload = getUsers;
+    
+    useEffect(() => {
+        getUsers();
+    }, []);
 
     const deleteUser = async (userID: number) => {
         try {
