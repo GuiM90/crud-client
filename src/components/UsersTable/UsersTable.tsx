@@ -2,6 +2,8 @@ import * as C from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { getUsers } from "../../services/getusers";
+import { deleteUser } from "../../services/deleteUser";
 
 interface User {
     id: number
@@ -13,39 +15,17 @@ interface Props {
     users: User[]
 }
 
-export const Users = () => {
+export const UsersTable = () => {
     const [allUsers, setAllUsers] = useState([]);
-    const baseURL = "http://localhost:3001/user";
-    
-    const getUsers = async (): Promise<User[]> => {
-        const response = await fetch(baseURL);
-        const json = await response.json();
-        setAllUsers(json);
-        return json;
-    };
-    
-    useEffect(() => {
-        getUsers();
-    }, []);
 
-    const deleteUser = async (userID: number) => {
-        try {
-            const serverReq: Response = await fetch(baseURL, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id: userID
-                }),
-            });
-            const response = await serverReq.json();
-            if (response.status !== 200) throw new Error();
-            getUsers();
-        } catch(e) {
-            console.log(e);
-        };
-    }
+    const setUsersInTable = async () => {
+        const users = await getUsers();
+        setAllUsers(users);
+    };
+
+    useEffect(() => {
+        setUsersInTable();
+    }, []);
 
     const UserList = (props: Props) => {
         const { users } = props;
@@ -55,11 +35,14 @@ export const Users = () => {
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
-                    <C.DeleteButton onClick={() => deleteUser(user.id)}><FontAwesomeIcon icon={faTrashCan} /></C.DeleteButton>
+                    <C.DeleteButton onClick={() => {
+                        deleteUser(user.id);
+                        return setUsersInTable();
+                    }}><FontAwesomeIcon icon={faTrashCan} /></C.DeleteButton>
                     <C.EditButton><FontAwesomeIcon icon={faPencil} /></C.EditButton>
                 </td>
             </tr>
-        )
+        );
         return (
             <tbody>{userList}</tbody>
         );

@@ -1,71 +1,56 @@
-import * as C from "./styles" ;
-import { Users } from "../UsersTable/Users";
+import * as C from "./styles";
+import { UsersTable } from "../UsersTable/UsersTable";
 import React, { useState } from "react";
+import { saveUser } from "../../services/saveUser";
 
 export const UserForm = () => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
-    const baseURL = "http://localhost:3001/user";
-
-    const saveUser = async () => {
-        try {
-            const serverReq: Response = await fetch(baseURL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: userName,
-                    email: userEmail,
-                }),
-            });
-            const response = await serverReq.json();
-            if (response.status !== 200) throw new Error();
-            inputClear();
-        } catch(e) {
-            console.log(e);
-        };
-    };
 
     const inputClear = () => {
         setUserEmail("");
         setUserName("");
     };
 
-    return(
-    <C.Container>
+    const sendRegister = async () => {
+        await saveUser(userName, userEmail);
+        inputClear();
+    };
 
-        <C.FormWrapper>
+    return (
+        <C.Container>
 
-        <C.InputWrapper>
-            <div>
-                <label htmlFor="name">Nome</label>
-                <input type="text"
-                 placeholder="Digite o nome..." 
-                 value={userName}
-                 name="name"
-                 onChange={e => setUserName(e.target.value)}/>
-            </div>
-            <div>
-                <label htmlFor="email">E-mail</label>
-                <input type="text"
-                 placeholder="Digite o email... "
-                 value={userEmail}
-                  name="email"
-                  onChange={e => setUserEmail(e.target.value)}/>
-            </div>
-        </C.InputWrapper>
+            <C.FormWrapper>
 
-        <C.ButtonWrapper>
-            <C.SaveButton onClick={saveUser}>Salvar</C.SaveButton>
-            <C.CancelButton onClick={inputClear}>Cancelar</C.CancelButton>
-        </C.ButtonWrapper>
+                <C.InputWrapper>
+                    <div>
+                        <label htmlFor="name">Nome</label>
+                        <input type="text"
+                            placeholder="Digite o nome..."
+                            value={userName}
+                            name="name"
+                            onChange={e => setUserName(e.target.value)} />
+                    </div>
+                    <div>
+                        <label htmlFor="email">E-mail</label>
+                        <input type="text"
+                            placeholder="Digite o email... "
+                            value={userEmail}
+                            name="email"
+                            onChange={e => setUserEmail(e.target.value)} />
+                    </div>
+                </C.InputWrapper>
 
-        <C.TableWrapper>
-            <Users/>
-        </C.TableWrapper>
+                <C.ButtonWrapper>
+                    <C.SaveButton onClick={sendRegister}>Salvar</C.SaveButton>
+                    <C.CancelButton onClick={inputClear}>Cancelar</C.CancelButton>
+                </C.ButtonWrapper>
 
-        </C.FormWrapper>
-    </C.Container>
+                <C.TableWrapper>
+                    <UsersTable />
+                </C.TableWrapper>
+
+            </C.FormWrapper>
+        </C.Container>
     );
 }
