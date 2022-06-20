@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { GlobalStyle } from "./global";
 import { UserForm } from "./components/UserForm/UserForm";
 import { UsersTable } from "./components/UsersTable/UsersTable";
-import { getUsers } from "./services/getusers";
+import { getUsers } from "./services/getUsers";
 import styled from "styled-components";
 
 function App() {

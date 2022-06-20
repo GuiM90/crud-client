@@ -2,7 +2,7 @@ import * as C from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, Dispatch, SetStateAction } from "react";
-import { getUsers } from "../../services/getusers";
+import { getUsers } from "../../services/getUsers";
 import { deleteUser } from "../../services/deleteUser";
 
 interface User {
