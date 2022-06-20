@@ -1,7 +1,7 @@
 import * as C from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect, Dispatch, SetStateAction } from "react";
 import { getUsers } from "../../services/getusers";
 import { deleteUser } from "../../services/deleteUser";
 
@@ -11,23 +11,33 @@ interface User {
     email: string
 }
 
-interface Props {
+interface PropsUsersList {
     users: User[]
 }
 
-export const UsersTable = () => {
-    const [allUsers, setAllUsers] = useState([]);
+interface PropsTable{
+    users: User[]
+    renderUsers: Dispatch<SetStateAction<never[]>>
+}
+
+export const UsersTable = (props: PropsTable) => {
+    const { users, renderUsers } = props;
 
     const setUsersInTable = async () => {
         const users = await getUsers();
-        setAllUsers(users);
+        renderUsers(users);
     };
 
     useEffect(() => {
         setUsersInTable();
     }, []);
 
-    const UserList = (props: Props) => {
+    const removeUser = async (userID: number) => {
+        await deleteUser(userID);
+        return setUsersInTable();
+    };
+
+    const UserList = (props: PropsUsersList) => {
         const { users } = props;
         const userList = users.map((user) =>
             <tr key={user.id}>
@@ -35,11 +45,10 @@ export const UsersTable = () => {
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
-                    <C.DeleteButton onClick={() => {
-                        deleteUser(user.id);
-                        return setUsersInTable();
-                    }}><FontAwesomeIcon icon={faTrashCan} /></C.DeleteButton>
-                    <C.EditButton><FontAwesomeIcon icon={faPencil} /></C.EditButton>
+                    <C.DeleteButton onClick={() => removeUser(user.id)}><FontAwesomeIcon icon={faTrashCan} />
+                    </C.DeleteButton>
+                    <C.EditButton><FontAwesomeIcon icon={faPencil} />
+                    </C.EditButton>
                 </td>
             </tr>
         );
@@ -59,7 +68,7 @@ export const UsersTable = () => {
                     <th>Ações</th>
                 </tr>
             </thead>
-            <UserList users={allUsers}></UserList>
+            <UserList users={users}></UserList>
         </C.TableUsers>
     );
 }
