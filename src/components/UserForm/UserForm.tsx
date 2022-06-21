@@ -41,7 +41,7 @@ export const UserForm = (props: Props) => {
             });
         } else {
             const response = await saveUser(inputNameValue, inputEmailValue);
-            if (response.status != 200) {
+            if (response.error.errno == 1062) {
                 swal({
                     title: "Erro",
                     text: "Email já cadastrado!",
