@@ -12,8 +12,8 @@ export const saveUser = async (userName: string, userEmail: string) => {
             }),
         });
         const response = await serverReq.json();
-        if (response.status !== 200) throw new Error();
+        return response;
     } catch (e) {
-        console.log(e);
+        return e;
     };
 };

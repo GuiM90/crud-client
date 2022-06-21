@@ -2,6 +2,7 @@ import * as C from "./styles";
 import React, { Dispatch, SetStateAction } from "react";
 import { saveUser } from "../../services/saveUser";
 import { updateUser } from "../../services/updateUser";
+import swal from "sweetalert";
 
 interface Props {
     setUsers: () => void
@@ -32,9 +33,25 @@ export const UserForm = (props: Props) => {
     };
 
     const sendRegister = async () => {
-        await saveUser(inputNameValue, inputEmailValue);
-        setUsers();
-        inputClear();
+        if (inputNameValue == "" || inputEmailValue == "") {
+            swal({
+                title: "Erro",
+                text: "Preencha todos os campos",
+                icon: "error",
+            });
+        } else {
+            const response = await saveUser(inputNameValue, inputEmailValue);
+            if (response.status != 200) {
+                swal({
+                    title: "Erro",
+                    text: "Email já cadastrado!",
+                    icon: "error",
+                });
+            } else {
+                setUsers();
+                inputClear();
+            };
+        };
     };
 
     const editUser = async () => {
