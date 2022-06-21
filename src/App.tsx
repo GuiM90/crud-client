@@ -11,7 +11,13 @@ function App() {
   const setUsersInTable = async () => {
     const users = await getUsers();
     setAllUsers(users);
-};
+  };
+
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userID, setUserID] = useState(0);
+
+  const [isPost, setIsPost] = useState(true);
 
   return (
     <>
@@ -19,10 +25,24 @@ function App() {
       <Container>
         <FormWrapper>
           <UserForm
-           setUsers={setUsersInTable}/>
+            setUsers={setUsersInTable}
+            inputNameValue={userName}
+            changeInputNameValue={setUserName}
+            inputEmailValue={userEmail}
+            changeInputEmailValue={setUserEmail}
+            userID={userID}
+            isPost={isPost}
+            changeIsPost={setIsPost}
+          />
           <UsersTable
-           users={allUsers}
-           renderUsers={setAllUsers}/>
+            users={allUsers}
+            renderUsers={setAllUsers}
+            changeInputNameValue={setUserName}
+            changeInputEmailValue={setUserEmail}
+            userID={userID}
+            changeUserID={setUserID}
+            changeIsPost={setIsPost}
+          />
         </FormWrapper>
       </Container>
     </>

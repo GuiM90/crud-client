@@ -1,7 +1,7 @@
 import * as C from "./styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, Dispatch, SetStateAction } from "react";
+import React, { useEffect, Dispatch, SetStateAction } from "react";
 import { getUsers } from "../../services/getUsers";
 import { deleteUser } from "../../services/deleteUser";
 
@@ -15,13 +15,25 @@ interface PropsUsersList {
     users: User[]
 }
 
-interface PropsTable{
+interface PropsTable {
     users: User[]
     renderUsers: Dispatch<SetStateAction<never[]>>
+    changeInputNameValue: Dispatch<SetStateAction<string>>
+    changeInputEmailValue: Dispatch<SetStateAction<string>>
+    userID: number
+    changeUserID: Dispatch<SetStateAction<number>>
+    changeIsPost: Dispatch<SetStateAction<boolean>>
 }
 
 export const UsersTable = (props: PropsTable) => {
-    const { users, renderUsers } = props;
+    const {
+        users,
+        renderUsers,
+        changeInputNameValue,
+        changeInputEmailValue,
+        changeUserID,
+        changeIsPost,
+    } = props;
 
     const setUsersInTable = async () => {
         const users = await getUsers();
@@ -47,7 +59,14 @@ export const UsersTable = (props: PropsTable) => {
                 <td>
                     <C.DeleteButton onClick={() => removeUser(user.id)}><FontAwesomeIcon icon={faTrashCan} />
                     </C.DeleteButton>
-                    <C.EditButton><FontAwesomeIcon icon={faPencil} />
+                    <C.EditButton
+                        onClick={() => {
+                            changeIsPost(false);
+                            changeInputNameValue(user.name);
+                            changeInputEmailValue(user.email);
+                            changeUserID(user.id);
+                        }}>
+                        <FontAwesomeIcon icon={faPencil} />
                     </C.EditButton>
                 </td>
             </tr>

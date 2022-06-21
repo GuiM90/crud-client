@@ -41,8 +41,6 @@ export const ButtonWrapper = styled.div`
     }
 `;
 
-export const TableWrapper = styled(ButtonWrapper)``;
-
 export const SaveButton = styled.button`
     background: #00a8ff;
 

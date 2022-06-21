@@ -1,27 +1,50 @@
 import * as C from "./styles";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { saveUser } from "../../services/saveUser";
+import { updateUser } from "../../services/updateUser";
 
 interface Props {
     setUsers: () => void
+    inputNameValue: string
+    inputEmailValue: string
+    changeInputNameValue: Dispatch<SetStateAction<string>>
+    changeInputEmailValue: Dispatch<SetStateAction<string>>
+    userID: number
+    isPost: boolean
+    changeIsPost: Dispatch<SetStateAction<boolean>>
 }
 
 export const UserForm = (props: Props) => {
-    const { setUsers } = props;
-
-    const [userName, setUserName] = useState("");
-    const [userEmail, setUserEmail] = useState("");
+    const { setUsers,
+        inputNameValue,
+        changeInputEmailValue,
+        inputEmailValue,
+        changeInputNameValue,
+        userID,
+        isPost,
+        changeIsPost,
+    } = props;
 
     const inputClear = () => {
-        setUserEmail("");
-        setUserName("");
+        changeInputNameValue("");
+        changeInputEmailValue("");
+        changeIsPost(true);
     };
 
     const sendRegister = async () => {
-        await saveUser(userName, userEmail);
+        await saveUser(inputNameValue, inputEmailValue);
         setUsers();
         inputClear();
     };
+
+    const editUser = async () => {
+        await updateUser(inputNameValue, inputEmailValue, userID);
+        setUsers();
+        inputClear();
+        changeIsPost(true);
+    }
+
+    const buttonMethod = isPost ? sendRegister : editUser;
 
     return (
         <>
@@ -30,22 +53,22 @@ export const UserForm = (props: Props) => {
                     <label htmlFor="name">Nome</label>
                     <input type="text"
                         placeholder="Digite o nome..."
-                        value={userName}
+                        value={inputNameValue}
                         name="name"
-                        onChange={e => setUserName(e.target.value)} />
+                        onChange={e => changeInputNameValue(e.target.value)} />
                 </div>
                 <div>
                     <label htmlFor="email">E-mail</label>
                     <input type="text"
                         placeholder="Digite o email... "
-                        value={userEmail}
+                        value={inputEmailValue}
                         name="email"
-                        onChange={e => setUserEmail(e.target.value)} />
+                        onChange={e => changeInputEmailValue(e.target.value)} />
                 </div>
             </C.InputWrapper>
 
             <C.ButtonWrapper>
-                <C.SaveButton onClick={sendRegister}>Salvar</C.SaveButton>
+                <C.SaveButton onClick={buttonMethod}>Salvar</C.SaveButton>
                 <C.CancelButton onClick={inputClear}>Cancelar</C.CancelButton>
             </C.ButtonWrapper>
         </>
