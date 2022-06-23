@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GlobalStyle } from "./global";
+import { GlobalStyle } from "./assets/style/global";
 import { UserForm } from "./components/UserForm/UserForm";
 import { UsersTable } from "./components/UsersTable/UsersTable";
 import { getUsers } from "./services/getUsers";
